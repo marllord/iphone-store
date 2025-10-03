@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="login-page">
+  <header>
+    <div class="container nav-container">
+      <h1 class="logo">iPhone Store</h1>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="login.html">Login</a>
+        <button id="btnLogout" class="btn-logout">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="login-form-container">
+      <h2>Login to Your Account</h2>
+      <form id="loginForm" class="login-form">
+        <input type="text" id="username" placeholder="Username" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <button type="submit" class="btn-primary">Login</button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 iPhone Store</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      localStorage.setItem('user', username);
+      alert('Login successful!');
+      window.location.href = 'index.html';
+    });
+
+    // Logout button logic on login page (to hide if no user)
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = localStorage.getItem('user');
+      const btnLogout = document.getElementById('btnLogout');
+      if (btnLogout) {
+        if (user) {
+          btnLogout.style.display = 'inline-block';
+        } else {
+          btnLogout.style.display = 'none';
+        }
+        btnLogout.addEventListener('click', () => {
+          localStorage.removeItem('user');
+          alert('Logged out successfully.');
+          window.location.href = 'index.html';
+        });
+      }
+    });
+  </script>
+</body>
+</html>
+
+
