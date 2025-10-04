@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>Purchase iPhone</title>
+
+  
   <style>
     /* Basic Reset */
     * {
@@ -122,140 +124,164 @@
       margin-top: 40px;
     }
   </style>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Purchase iPhone</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body class="purchase-page">
-  <header>
-    <div class="container nav-container">
-      <h1 class="logo">iPhone Store</h1>
-      <nav>
-        <a href="index.html">Home</a>
-        <a href="login.html">Login</a>
-        <button id="btnLogout" class="btn-logout">Logout</button>
-      </nav>
-    </div>
-  </header>
 
-  <main class="container">
-    <h2 id="purchaseTitle">Buy iPhone Model</h2>
+<header>
+  <div class="container nav-container">
+    <h1 class="logo">iPhone Store</h1>
+    <nav id="navLinks">
+      <!-- Links will be injected here -->
+    </nav>
+  </div>
+</header>
 
-    <!-- Image placeholder -->
-    <img id="productImage" class="product-image" src="" alt="iPhone Image" />
+<main class="container purchase-info">
+  <h2 id="purchaseTitle">Buy iPhone</h2>
+  <img id="modelImage" src="" alt="Phone Image" style="max-width: 250px; margin: 20px auto; display: block; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);" />
+  <p id="details">Loading...</p>
+  <div id="loginCheck"></div>
+  <button id="btnPurchase" class="btn-primary" disabled>Purchase</button>
+</main>
 
-    <div id="details" class="purchase-info"></div>
+<footer>
+  <div class="container footer-container">
+    <p>&copy; 2025 iPhone Store</p>
+  </div>
+</footer>
 
-    <div id="loginCheck"></div>
+<script>
+  const productPrices = {
+    'iPhone 12': 39900,
+    'iPhone 12 mini': 34900,
+    'iPhone 12 Pro': 52900,
+    'iPhone 12 Pro Max': 59900,
+    'iPhone 13': 45900,
+    'iPhone 13 mini': 39900,
+    'iPhone 13 Pro': 59900,
+    'iPhone 13 Pro Max': 67900,
+    'iPhone 14': 52900,
+    'iPhone 14 Plus': 59900,
+    'iPhone 14 Pro': 69900,
+    'iPhone 14 Pro Max': 79900,
+    'iPhone 15': 56990,
+    'iPhone 15 Plus': 63990,
+    'iPhone 15 Pro': 70990,
+    'iPhone 15 Pro Max': 84990,
+  };
 
-    <button id="btnPurchase" class="btn-primary" disabled>Purchase</button>
-  </main>
+  // Map models to images - update with your correct paths & filenames (jpg)
+  const productImages = {
+    'iPhone 12': 'images/iphone12.jpg',
+    'iPhone 12 mini': 'images/iphone12-mini.jpg',
+    'iPhone 12 Pro': 'images/iphone12-pro.jpg',
+    'iPhone 12 Pro Max': 'images/iphone12-pro-max.jpg',
+    'iPhone 13': 'images/iphone13.jpg',
+    'iPhone 13 mini': 'images/iphone13-mini.jpg',
+    'iPhone 13 Pro': 'images/iphone13-pro.jpg',
+    'iPhone 13 Pro Max': 'images/iphone13-pro-max.jpg',
+    'iPhone 14': 'images/iphone14.jpg',
+    'iPhone 14 Plus': 'images/iphone14-plus.jpg',
+    'iPhone 14 Pro': 'images/iphone14-pro.jpg',
+    'iPhone 14 Pro Max': 'images/iphone14-pro-max.jpg',
+    'iPhone 15': 'images/iphone15.jpg',
+    'iPhone 15 Plus': 'images/iphone15-plus.jpg',
+    'iPhone 15 Pro': 'images/iphone15-pro.jpg',
+    'iPhone 15 Pro Max': 'images/iphone15-pro-max.jpg',
+  };
 
-  <footer>
-    <div class="container">
-      <p>&copy; 2025 iPhone Store</p>
-    </div>
-  </footer>
+  function updateNav(user) {
+    const nav = document.getElementById('navLinks');
+    nav.innerHTML = '';
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const user = localStorage.getItem('user');
+    // Home link always
+    const homeLink = document.createElement('a');
+    homeLink.href = 'index.html';
+    homeLink.textContent = 'Home';
+    nav.appendChild(homeLink);
 
-      // Logout button logic
-      const btnLogout = document.getElementById('btnLogout');
-      if (btnLogout) {
-        btnLogout.style.display = user ? 'inline-block' : 'none';
-        btnLogout.addEventListener('click', () => {
-          localStorage.removeItem('user');
-          alert('Logged out successfully.');
-          window.location.href = 'index.html';
-        });
+  
+
+    if (user) {
+      // Welcome and Logout
+      const welcome = document.createElement('span');
+      welcome.style.color = '#fff';
+      welcome.style.marginLeft = '15px';
+      welcome.textContent = `Welcome, ${user}`;
+      nav.appendChild(welcome);
+
+      const logoutBtn = document.createElement('button');
+      logoutBtn.textContent = 'Logout';
+      logoutBtn.className = 'btn-logout';
+      logoutBtn.style.marginLeft = '15px';
+      logoutBtn.addEventListener('click', () => {
+        localStorage.removeItem('user');
+        location.reload();
+      });
+      nav.appendChild(logoutBtn);
+    } else {
+      // Show Login and Sign Up
+      const loginLink = document.createElement('a');
+      loginLink.href = 'login.html';
+      loginLink.textContent = 'Login';
+      nav.appendChild(loginLink);
+
+      const signupLink = document.createElement('a');
+      signupLink.href = 'signup.html';
+      signupLink.textContent = 'Sign Up';
+      signupLink.className = 'btn-signup';
+      signupLink.style.marginLeft = '10px';
+      nav.appendChild(signupLink);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const model = urlParams.get('model');
+    const price = productPrices[model] || 0;
+    const user = localStorage.getItem('user');
+
+    updateNav(user);
+
+    // Show purchase info
+    document.getElementById('purchaseTitle').textContent = `Buy ${model}`;
+    document.getElementById('details').textContent = `You selected: ${model}. Price: ₱${price.toLocaleString()}`;
+
+    // Show image
+    const modelImage = document.getElementById('modelImage');
+    if (productImages[model]) {
+      modelImage.src = productImages[model];
+      modelImage.alt = model;
+    } else {
+      modelImage.style.display = 'none';
+    }
+
+    const loginCheck = document.getElementById('loginCheck');
+    const btnPurchase = document.getElementById('btnPurchase');
+
+    if (user) {
+      loginCheck.innerHTML = `<p class="logged-in">Logged in as <strong>${user}</strong></p>`;
+      btnPurchase.disabled = false;
+    } else {
+      loginCheck.innerHTML = `<p class="not-logged-in">Please <a href="login.html">login</a> to purchase.</p>`;
+      btnPurchase.disabled = true;
+    }
+
+    btnPurchase.addEventListener('click', () => {
+      if (!user) {
+        alert('You must login first.');
+        window.location.href = 'login.html';
+        return;
       }
-
-      // Purchase page logic
-      if (window.location.pathname.includes('purchase.html')) {
-        const productPrices = {
-          'iPhone 12': 39900,
-          'iPhone 12 mini': 34900,
-          'iPhone 12 Pro': 52900,
-          'iPhone 12 Pro Max': 59900,
-
-          'iPhone 13': 45900,
-          'iPhone 13 mini': 39900,
-          'iPhone 13 Pro': 59900,
-          'iPhone 13 Pro Max': 67900,
-
-          'iPhone 14': 52900,
-          'iPhone 14 Plus': 59900,
-          'iPhone 14 Pro': 69900,
-          'iPhone 14 Pro Max': 79900,
-
-          'iPhone 15': 56990,
-          'iPhone 15 Plus': 63990,
-          'iPhone 15 Pro': 70990,
-          'iPhone 15 Pro Max': 84990,
-        };
-
-        // Map each model to an image path (adjust the image filenames/path as needed)
-        const productImages = {
-          'iPhone 12': 'images/iphone12.jpg',
-          'iPhone 12 mini': 'images/iphone12mini.jpg',
-          'iPhone 12 Pro': 'images/iphone12pro.jpg',
-          'iPhone 12 Pro Max': 'images/iphone12promax.jpg',
-
-          'iPhone 13': 'images/iphone13.jpg',
-          'iPhone 13 mini': 'images/iphone13mini.jpg',
-          'iPhone 13 Pro': 'images/iphone13pro.jpg',
-          'iPhone 13 Pro Max': 'images/iphone13promax.jpg',
-
-          'iPhone 14': 'images/iphone14.jpg',
-          'iPhone 14 Plus': 'images/iphone14plus.jpg',
-          'iPhone 14 Pro': 'images/iphone14pro.jpg',
-          'iPhone 14 Pro Max': 'images/iphone14promax.jpg',
-
-          'iPhone 15': 'images/iphone15.jpg',
-          'iPhone 15 Plus': 'images/iphone15plus.jpg',
-          'iPhone 15 Pro': 'images/iphone15pro.jpg',
-          'iPhone 15 Pro Max': 'images/iphone15promax.jpg',
-        };
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const model = urlParams.get('model');
-        const price = productPrices[model] || 0;
-
-        const purchaseTitle = document.getElementById('purchaseTitle');
-        const details = document.getElementById('details');
-        const loginCheck = document.getElementById('loginCheck');
-        const btnPurchase = document.getElementById('btnPurchase');
-        const productImage = document.getElementById('productImage');
-
-        if (purchaseTitle) purchaseTitle.textContent = `Buy ${model}`;
-        if (details) details.textContent = `You selected: ${model}. Price: ₱${price.toLocaleString()}`;
-
-        // Set product image src or fallback alt if not found
-        if (productImage) {
-          if (productImages[model]) {
-            productImage.src = productImages[model];
-            productImage.alt = model;
-          } else {
-            productImage.src = '';
-            productImage.alt = 'Image not available';
-          }
-        }
-
-        if (user) {
-          loginCheck.innerHTML = `<p class="logged-in">Logged in as <strong>${user}</strong></p>`;
-          btnPurchase.disabled = false;
-        } else {
-          loginCheck.innerHTML = `<p class="not-logged-in">Please <a href="login.html">login</a> to purchase.</p>`;
-          btnPurchase.disabled = true;
-        }
-
-        btnPurchase.addEventListener('click', () => {
-          if (!user) {
-            alert('You must login first.');
-            window.location.href = 'login.html';
-            return;
-          }
-          const date = new Date();
-          const receipt = `
+      const date = new Date();
+      const receipt = `
 === RECEIPT ===
 Date: ${date.toLocaleString()}
 User: ${user}
@@ -264,10 +290,10 @@ Price: ₱${price.toLocaleString()}
 
 Thank you for your purchase!
 `;
-          alert(receipt);
-        });
-      }
+      alert(receipt);
     });
-  </script>
+  });
+</script>
+
 </body>
 </html>
