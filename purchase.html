@@ -2,8 +2,126 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Purchase</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Purchase iPhone</title>
+  <style>
+    /* Basic Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f7f7f7;
+      color: #333;
+      line-height: 1.6;
+    }
+    a {
+      color: #0071e3;
+      text-decoration: none;
+    }
+    a:hover {
+      color: #005bb5;
+    }
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    /* Header */
+    header {
+      background-color: #000;
+      color: #fff;
+    }
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    nav a {
+      margin-left: 20px;
+      font-size: 16px;
+    }
+    .btn-logout {
+      background-color: #e63946;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 20px;
+      font-size: 16px;
+    }
+    .btn-logout:hover {
+      background-color: #b8323a;
+    }
+    /* Main content */
+    main {
+      padding: 40px 0;
+      text-align: center;
+    }
+    .purchase-info {
+      background-color: #fff;
+      padding: 30px 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      max-width: 500px;
+      margin: 20px auto 40px auto;
+      font-size: 18px;
+      color: #111;
+    }
+    .product-image {
+      max-width: 300px;
+      width: 100%;
+      height: auto;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      margin: 0 auto 20px auto;
+      display: block;
+    }
+    .logged-in {
+      color: #28a745;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .not-logged-in {
+      color: #dc3545;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .btn-primary {
+      display: block;
+      margin: 20px auto 0 auto;
+      padding: 12px 30px;
+      font-size: 18px;
+      background-color: #0071e3;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .btn-primary:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
+    }
+    .btn-primary:hover:not(:disabled) {
+      background-color: #005bb5;
+    }
+    /* Footer */
+    footer {
+      background-color: #1c1c1e;
+      color: #8e8e93;
+      text-align: center;
+      padding: 20px 0;
+      margin-top: 40px;
+    }
+  </style>
 </head>
 <body class="purchase-page">
   <header>
@@ -18,12 +136,16 @@
   </header>
 
   <main class="container">
-    <div class="purchase-info">
-      <h2 id="purchaseTitle">Buy iPhone</h2>
-      <p id="details"></p>
-      <div id="loginCheck"></div>
-      <button id="btnPurchase" class="btn-primary">Purchase</button>
-    </div>
+    <h2 id="purchaseTitle">Buy iPhone Model</h2>
+
+    <!-- Image placeholder -->
+    <img id="productImage" class="product-image" src="" alt="iPhone Image" />
+
+    <div id="details" class="purchase-info"></div>
+
+    <div id="loginCheck"></div>
+
+    <button id="btnPurchase" class="btn-primary" disabled>Purchase</button>
   </main>
 
   <footer>
@@ -32,7 +154,120 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = localStorage.getItem('user');
+
+      // Logout button logic
+      const btnLogout = document.getElementById('btnLogout');
+      if (btnLogout) {
+        btnLogout.style.display = user ? 'inline-block' : 'none';
+        btnLogout.addEventListener('click', () => {
+          localStorage.removeItem('user');
+          alert('Logged out successfully.');
+          window.location.href = 'index.html';
+        });
+      }
+
+      // Purchase page logic
+      if (window.location.pathname.includes('purchase.html')) {
+        const productPrices = {
+          'iPhone 12': 39900,
+          'iPhone 12 mini': 34900,
+          'iPhone 12 Pro': 52900,
+          'iPhone 12 Pro Max': 59900,
+
+          'iPhone 13': 45900,
+          'iPhone 13 mini': 39900,
+          'iPhone 13 Pro': 59900,
+          'iPhone 13 Pro Max': 67900,
+
+          'iPhone 14': 52900,
+          'iPhone 14 Plus': 59900,
+          'iPhone 14 Pro': 69900,
+          'iPhone 14 Pro Max': 79900,
+
+          'iPhone 15': 56990,
+          'iPhone 15 Plus': 63990,
+          'iPhone 15 Pro': 70990,
+          'iPhone 15 Pro Max': 84990,
+        };
+
+        // Map each model to an image path (adjust the image filenames/path as needed)
+        const productImages = {
+          'iPhone 12': 'images/iphone12.jpg',
+          'iPhone 12 mini': 'images/iphone12mini.jpg',
+          'iPhone 12 Pro': 'images/iphone12pro.jpg',
+          'iPhone 12 Pro Max': 'images/iphone12promax.jpg',
+
+          'iPhone 13': 'images/iphone13.jpg',
+          'iPhone 13 mini': 'images/iphone13mini.jpg',
+          'iPhone 13 Pro': 'images/iphone13pro.jpg',
+          'iPhone 13 Pro Max': 'images/iphone13promax.jpg',
+
+          'iPhone 14': 'images/iphone14.jpg',
+          'iPhone 14 Plus': 'images/iphone14plus.jpg',
+          'iPhone 14 Pro': 'images/iphone14pro.jpg',
+          'iPhone 14 Pro Max': 'images/iphone14promax.jpg',
+
+          'iPhone 15': 'images/iphone15.jpg',
+          'iPhone 15 Plus': 'images/iphone15plus.jpg',
+          'iPhone 15 Pro': 'images/iphone15pro.jpg',
+          'iPhone 15 Pro Max': 'images/iphone15promax.jpg',
+        };
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const model = urlParams.get('model');
+        const price = productPrices[model] || 0;
+
+        const purchaseTitle = document.getElementById('purchaseTitle');
+        const details = document.getElementById('details');
+        const loginCheck = document.getElementById('loginCheck');
+        const btnPurchase = document.getElementById('btnPurchase');
+        const productImage = document.getElementById('productImage');
+
+        if (purchaseTitle) purchaseTitle.textContent = `Buy ${model}`;
+        if (details) details.textContent = `You selected: ${model}. Price: ₱${price.toLocaleString()}`;
+
+        // Set product image src or fallback alt if not found
+        if (productImage) {
+          if (productImages[model]) {
+            productImage.src = productImages[model];
+            productImage.alt = model;
+          } else {
+            productImage.src = '';
+            productImage.alt = 'Image not available';
+          }
+        }
+
+        if (user) {
+          loginCheck.innerHTML = `<p class="logged-in">Logged in as <strong>${user}</strong></p>`;
+          btnPurchase.disabled = false;
+        } else {
+          loginCheck.innerHTML = `<p class="not-logged-in">Please <a href="login.html">login</a> to purchase.</p>`;
+          btnPurchase.disabled = true;
+        }
+
+        btnPurchase.addEventListener('click', () => {
+          if (!user) {
+            alert('You must login first.');
+            window.location.href = 'login.html';
+            return;
+          }
+          const date = new Date();
+          const receipt = `
+=== RECEIPT ===
+Date: ${date.toLocaleString()}
+User: ${user}
+Model: ${model}
+Price: ₱${price.toLocaleString()}
+
+Thank you for your purchase!
+`;
+          alert(receipt);
+        });
+      }
+    });
+  </script>
 </body>
 </html>
-

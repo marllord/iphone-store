@@ -44,31 +44,31 @@ if (window.location.pathname.includes('series.html')) {
   const series = urlParams.get('series');
 
   const seriesModels = {
-    '12': [
-      { name: 'iPhone 12' },
-      { name: 'iPhone 12 mini' },
-      { name: 'iPhone 12 Pro' },
-      { name: 'iPhone 12 Pro Max' },
-    ],
-    '13': [
-      { name: 'iPhone 13' },
-      { name: 'iPhone 13 mini' },
-      { name: 'iPhone 13 Pro' },
-      { name: 'iPhone 13 Pro Max' },
-    ],
-    '14': [
-      { name: 'iPhone 14' },
-      { name: 'iPhone 14 Plus' },
-      { name: 'iPhone 14 Pro' },
-      { name: 'iPhone 14 Pro Max' },
-    ],
-    '15': [
-      { name: 'iPhone 15' },
-      { name: 'iPhone 15 Plus' },
-      { name: 'iPhone 15 Pro' },
-      { name: 'iPhone 15 Pro Max' },
-    ],
-  };
+  '12': [
+    { name: 'iPhone 12', img: 'images/iphone12.jpg' },
+    { name: 'iPhone 12 mini', img: 'images/iphone12mini.jpg' },
+    { name: 'iPhone 12 Pro', img: 'images/iphone12pro.jpg' },
+    { name: 'iPhone 12 Pro Max', img: 'images/iphone12promax.jpg' },
+  ],
+  '13': [
+    { name: 'iPhone 13', img: 'images/iphone13.jpg' },
+    { name: 'iPhone 13 mini', img: 'images/iphone13mini.jpg' },
+    { name: 'iPhone 13 Pro', img: 'images/iphone13pro.jpg' },
+    { name: 'iPhone 13 Pro Max', img: 'images/iphone13promax.jpg' },
+  ],
+  '14': [
+    { name: 'iPhone 14', img: 'images/iphone14.jpg' },
+    { name: 'iPhone 14 Plus', img: 'images/iphone14plus.jpg' },
+    { name: 'iPhone 14 Pro', img: 'images/iphone14pro.jpg' },
+    { name: 'iPhone 14 Pro Max', img: 'images/iphone14promax.jpg' },
+  ],
+  '15': [
+    { name: 'iPhone 15', img: 'images/iphone15.jpg' },
+    { name: 'iPhone 15 Plus', img: 'images/iphone15plus.jpg' },
+    { name: 'iPhone 15 Pro', img: 'images/iphone15pro.jpg' },
+    { name: 'iPhone 15 Pro Max', img: 'images/iphone15promax.jpg' },
+  ],
+};
 
   const models = seriesModels[series] || [];
   document.getElementById('seriesTitle').textContent = `iPhone ${series} Series`;
@@ -78,13 +78,15 @@ if (window.location.pathname.includes('series.html')) {
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = `
-      <a href="purchase.html?model=${encodeURIComponent(model.name)}">
-        <div class="card-body">
-          <h3>${model.name}</h3>
-          <p>Price: ₱${productPrices[model.name].toLocaleString()}</p>
-        </div>
-      </a>
-    `;
+  <a href="purchase.html?model=${encodeURIComponent(model.name)}">
+    <div class="card-body">
+      <img src="${model.img}" alt="${model.name}" class="model-image" />
+      <h3>${model.name}</h3>
+      <p>Price: ₱${productPrices[model.name].toLocaleString()}</p>
+    </div>
+  </a>
+`;
+
     list.appendChild(card);
   });
 }
